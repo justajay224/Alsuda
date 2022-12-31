@@ -1,0 +1,382 @@
+import java.util.Scanner;
+
+public class Alsuda {
+
+    static Scanner str = new Scanner(System.in);
+    static Scanner in = new Scanner(System.in);
+    static String jadwalPenerbangan[][] = { { "Yogyakarta - Jakarta - 06:30", "900000", "Beruang Laut" },
+            { "Yogyakarta - Lombok  - 14:00", "1300000", "Umbrella" },
+            { "Yogyakarta - Bandung - 16:40", "690000", "Gajah Terbang" } };
+    static String pesantiket[][] = new String[12][11];
+    static String beliTiket[][] = new String[12][10];
+    static String pulper[] = new String[12];
+
+    public static void daftarPenerbangan(String a[][]) {
+        System.out.println("\n<==== DAFTAR PENERBANGAN ====>");
+        System.out.println("\nNO Asal\t\tTujuan\t   Jam\t\tHarga\t\tMaskapai");
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length - 1; j++) {
+                int harga1 = Integer.parseInt(a[j][1]);
+                int harga2 = Integer.parseInt(a[j + 1][1]);
+                if (harga1 > harga2) {
+                    int temp = harga1;
+                    harga1 = harga2;
+                    harga2 = temp;
+                    // urut jadwal
+                    String p = a[j][0];
+                    a[j][0] = a[j + 1][0];
+                    a[j + 1][0] = p;
+                    // urut maskapai
+                    String m = a[j][2];
+                    a[j][2] = a[j + 1][2];
+                    a[j + 1][2] = m;
+                    a[j][1] = String.valueOf(harga1);
+                    a[j + 1][1] = String.valueOf(harga2);
+                }
+
+            }
+        }
+        for (int i = 0; i < a.length; i++) {
+            System.out.println((i + 1) + ". " + a[i][0] + "\t\t" + a[i][1] + "\t\t" + a[i][2]);
+        }
+
+    }
+
+    public static void pesanTiket(String a[][], String b[][]) {
+        daftarPenerbangan(a);
+        System.out.println("\n<=== PESAN TIKET ===>");
+        System.out.print("Jumlah Tiket : ");
+        int jt = in.nextInt();
+        for (int i = 0; i < jt; i++) {
+            System.out.println("\nTiket ke - " + (i + 1));
+            System.out.print("Pilih Jadwal Penerbangan : ");
+            int jp = in.nextInt();
+            System.out.print("Masukkan Nama : ");
+            b[i][0] = str.nextLine().toUpperCase();
+            System.out.print("Usia Penumpang \n1.Dewasa(Lebih Dari 8 Tahun)\n2.Anak-anak(Potongan 30%)\nPilih : ");
+            int usia = in.nextInt();
+            switch (usia) {
+                case 1:
+                    b[i][1] = "DEWASA";
+                    b[i][3] = a[jp - 1][1];
+                    break;
+                case 2:
+                    b[i][1] = "ANAK-ANAK";
+                    b[i][3] = a[jp - 1][1];
+                    int harga = Integer.parseInt(b[i][3]);
+                    harga = harga * 30 / 100;
+                    int harga1 = Integer.parseInt(b[i][3]);
+                    int total = harga + harga1;
+                    b[i][3] = String.valueOf(total);
+                    break;
+                default:
+                    System.out.println("Pilihan anda tidak ada '-v-'");
+                    break;
+            }
+            System.out.print("Kelas (EKONOMI/VIP) : ");
+            b[i][2] = str.nextLine().toUpperCase();
+            if (b[i][2].equals("EKONOMI")) {
+                b[i][3] = b[i][3];
+            } else if (b[i][2].equals("VIP")) {
+                int harga = Integer.parseInt(b[i][3]);
+                harga = harga * 35 / 100;
+                int harga1 = Integer.parseInt(b[i][3]);
+                int total = harga + harga1;
+                b[i][3] = String.valueOf(total);
+            } else {
+                System.out.println("Yang Anda Masukkan Salah");
+            }
+            b[i][4] = a[jp - 1][0];
+            b[i][7] = a[jp - 1][2];
+            b[i][8] = a[jp - 1][1];
+            System.out.print("Tentukan Tanggal Penerbangan(tgl-bln-thn) : ");
+            b[i][5] = str.nextLine().toUpperCase();
+            System.out.print("Pulang Pergi(Y/N) ? ");
+            String pp = str.nextLine().toUpperCase();
+            if (pp.equals("N")) {
+                b[i][6] = "Satu Arah";
+            } else if (pp.equals("Y")) {
+                b[i][6] = "Pulang Pergi";
+                int harga = Integer.parseInt(b[i][3]);
+                int total = harga * 2;
+                b[i][3] = String.valueOf(total);
+                System.out.println("Tentukan Tanggal Pulang(tgl-bln-thn) : ");
+                String pulang = str.nextLine();
+                b[i][10] = pulang;
+            }
+            b[i][9] = a[jp - 1][1];
+            System.out.println("\nTiket Berhasil di Pesan  ^>^");
+        }
+    }
+
+    public static void PP(String p) {
+        for (int i = 0; i < pulper.length; i++) {
+            pulper[i] = p;
+        }
+    }
+
+    public static void hapusTiket(String tik[][]) {
+        if (tik[0][0] == null) {
+            System.out.println("\nAnda Belum Memesan Tiket");
+        } else {
+            lihatPesananTiket(tik);
+            System.out.println("\n< BATALKAN PESANAN TIKET >");
+            System.out.print("Pilih Tiket Keberapa Yang Ingin di Batalkan ? ");
+            int i = in.nextInt();
+            tik[i - 1][0] = null;
+            tik[i - 1][1] = null;
+            tik[i - 1][2] = null;
+            tik[i - 1][3] = null;
+            tik[i - 1][4] = null;
+            tik[i - 1][5] = null;
+            tik[i - 1][6] = null;
+            tik[i - 1][7] = null;
+            tik[i - 1][8] = null;
+            tik[i - 1][9] = null;
+            if (tik[i - 1][10] != null) {
+                tik[i - 1][10] = null;
+            }
+            for (int k = 0; k < tik.length - 1; k++) {
+                if (tik[k][0] == null) {
+                    if (tik[k + 1][0] != null) {
+                        tik[k][0] = tik[k + 1][0];
+                        tik[k][1] = tik[k + 1][1];
+                        tik[k][2] = tik[k + 1][2];
+                        tik[k][3] = tik[k + 1][3];
+                        tik[k][4] = tik[k + 1][4];
+                        tik[k][5] = tik[k + 1][5];
+                        tik[k][6] = tik[k + 1][6];
+                        tik[k][7] = tik[k + 1][7];
+                        tik[k][8] = tik[k + 1][8];
+                        tik[k][9] = tik[k + 1][9];
+                        if (tik[k + 1][10] == null) {
+                            tik[k][10] = tik[k + 1][10];
+                        }
+                        tik[k + 1][0] = null;
+                        tik[k + 1][1] = null;
+                        tik[k + 1][2] = null;
+                        tik[k + 1][3] = null;
+                        tik[k + 1][4] = null;
+                        tik[k + 1][5] = null;
+                        tik[k + 1][6] = null;
+                        tik[k + 1][7] = null;
+                        tik[k + 1][8] = null;
+                        tik[k + 1][9] = null;
+                        tik[k + 1][10] = null;
+                    }
+                }
+            }
+            System.out.println("Tiket ke-" + i + " Berhasil di Hapus  ^D^");
+        }
+    }
+
+    public static void lihatPesananTiket(String tik[][]) {
+        if (tik[0][0] == null) {
+            System.out.println("\nAnda Belum Memesan Tiket 0-0");
+        } else {
+            System.out.println("\n<TIKET>");
+            for (int i = 0; i < tik.length; i++) {
+                if (tik[i][0] == null) {
+                    break;
+                }
+                System.out.println("\nTiket ke " + (i + 1));
+                System.out.println("Nama\t\t: " + tik[i][0]);
+                System.out.println("Usia\t\t: " + tik[i][1]);
+                System.out.println("Maskapai\t: " + tik[i][7]);
+                System.out.println("Kelas\t\t: " + tik[i][2]);
+                System.out.println("Harga\t\t: " + tik[i][9]);
+                System.out.println("Jadwal\t\t: " + tik[i][4]);
+                System.out.println("Tipe\t\t: " + tik[i][6]);
+                System.out.println("Tanggal Pergi\t: " + tik[i][5]);
+                if (tik[i][10] != null) {
+                    System.out.println("Tanggal Pulang\t:" + tik[i][10]);
+                }
+            }
+        }
+    }
+
+    public static String noId(String arr[][], String a) {
+        String re = "";
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i][0] == null) {
+                re = a + String.format("%04d", (i + 1));
+                break;
+            } else if (!arr[i][0].equals(a + String.format("%04d", i))) {
+                re = a + String.format("%04d", i);
+            }
+        }
+        return re;
+    }
+
+    public static void beliTiket(String arr[][], String buy[][]) {
+        lihatPesananTiket(arr);
+        System.out.print("\nBeli Tiket(Y/N) ? ");
+        String beli = str.nextLine().toUpperCase();
+        if (beli.equals("Y")) {
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i][0] == null) {
+                    break;
+                }
+                String kursi = noId(pesantiket, "A");
+                buy[i][0] = kursi;
+                // nama
+                buy[i][1] = arr[i][0];
+                // jadwal
+                buy[i][2] = arr[i][4];
+                // tgl
+                buy[i][3] = arr[i][5];
+                // kelas
+                buy[i][4] = arr[i][2];
+                // tipe
+                buy[i][5] = arr[i][6];
+                // maskapai
+                buy[i][6] = arr[i][7];
+                // sub harga
+                buy[i][7] = arr[i][8];
+                // harga total
+                buy[i][8] = arr[i][3];
+                // tgl pulang
+                if (arr[i][10] != null) {
+                    buy[i][9] = arr[i][10];
+                }
+            }
+            int total_h = 0;
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i][0] == null) {
+                    break;
+                }
+                int total;
+                total = Integer.parseInt(buy[i][8]);
+                total_h = total_h + total;
+            }
+            System.out.println("Total Pembayaran = Rp." + total_h);
+            System.out.print("Bayar : ");
+            int bayar = in.nextInt();
+            bayar(bayar, total_h);
+            tiket(buy);
+            remove(arr);
+        } else if (beli.equals("N")) {
+            System.out.println("Pembelian Dibatalkan T~T");
+        } else {
+            System.out.println("Yang Anda Masukkan Salah -_-");
+        }
+    }
+
+    public static void bayar(int by, int tl) {
+        if (by == tl) {
+            System.out.println("<== Tiket Berhasil Dibeli ^o^ ==>");
+        } else if (by < tl) {
+            System.out.println("Uang Yang Anda Masukkan Kurang o#o");
+            endbuy();
+        } else if (by > tl) {
+            int kembalian = 0;
+            kembalian = kembalian + (by - tl);
+            System.out.println("Kembalian Anda Rp." + kembalian + " OvO");
+        } else {
+            System.out.println("Yang Anda Masukkan Salah ^u^");
+            endbuy();
+        }
+    }
+
+    public static void endbuy() {
+        System.out.print("Lanjutkan Pembelian(Y/N) ?");
+        String lnjt = str.nextLine().toUpperCase();
+        if (lnjt.equals("Y")) {
+            beliTiket(pesantiket, beliTiket);
+        } else if (lnjt.equals("N")) {
+            menudirect();
+        } else {
+            System.out.println("Yang Anda Masukkan Salah -c-");
+        }
+    }
+
+    public static void tiket(String arr[][]) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i][0] == null) {
+                break;
+            }
+            System.out.println("\nTiket ke-" + (i + 1));
+            System.out.println("Maskapai\t\t: " + arr[i][6]);
+            System.out.println("No Kursi \t\t: " + arr[i][0]);
+            System.out.println("Nama Penumpang\t\t: " + arr[i][1]);
+            System.out.println("Asal-Tujuan-Jam\t\t: " + arr[i][2]);
+            System.out.println("Kelas\t\t\t: " + arr[i][4]);
+            System.out.println("Tipe\t\t\t: " + arr[i][5]);
+            System.out.println("Tanggal Keberangkatan\t: " + arr[i][3]);
+            if (arr[i][9] != null) {
+                System.out.println("Tanggal Pulang\t: " + arr[i][9]);
+            }
+        }
+    }
+
+    public static void remove(String arr[][]) {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i][0] = null;
+            arr[i][1] = null;
+            arr[i][2] = null;
+            arr[i][3] = null;
+            arr[i][4] = null;
+            arr[i][5] = null;
+            arr[i][6] = null;
+            arr[i][7] = null;
+            arr[i][8] = null;
+            arr[i][9] = null;
+            arr[i][10] = null;
+        }
+    }
+
+    public static int menu() {
+        System.out.println("\n<==== MENU ====>");
+        System.out.println("1. Daftar Penerbangan");
+        System.out.println("2. Pesan Tiket");
+        System.out.println("3. Batalkan Pemesanan");
+        System.out.println("4. Lihat Pesanan Tiket");
+        System.out.println("5. Beli Tiket");
+        System.out.println("6. Lihat Tiket");
+        System.out.println("7. Keluar");
+        System.out.print("Pilih\t: ");
+        int pilih = in.nextInt();
+        return pilih;
+    }
+
+    public static void menudirect() {
+        int pilih = 0;
+        do {
+            pilih = menu();
+            switch (pilih) {
+                case 1:
+                    daftarPenerbangan(jadwalPenerbangan);
+                    break;
+                case 2:
+                    pesanTiket(jadwalPenerbangan, pesantiket);
+                    break;
+                case 3:
+                    hapusTiket(pesantiket);
+                    break;
+                case 4:
+                    lihatPesananTiket(pesantiket);
+                    break;
+                case 5:
+                    beliTiket(pesantiket, beliTiket);
+                    break;
+                case 6:
+                    tiket(beliTiket);
+                    break;
+                case 7:
+                    System.out.println("Keluar dari program... ;(");
+                    break;
+                default:
+                    System.out.println("\nPilihan Yang Anda Pilih Tidak Ada :)");
+            }
+        } while (pilih != 7);
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("\t\t< PEMESANAN TIKET PESAWAT >");
+        menudirect();
+
+    }
+
+}
