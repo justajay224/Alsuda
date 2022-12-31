@@ -149,7 +149,7 @@ public class Alsuda {
                         tik[k][7] = tik[k + 1][7];
                         tik[k][8] = tik[k + 1][8];
                         tik[k][9] = tik[k + 1][9];
-                        if (tik[k + 1][10] == null) {
+                        if (tik[k + 1][10] != null) {
                             tik[k][10] = tik[k + 1][10];
                         }
                         tik[k + 1][0] = null;
