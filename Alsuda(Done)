@@ -12,7 +12,25 @@ public class Alsuda {
 
     public static void daftarPenerbangan(String a[][]) {
         System.out.println("\n<==== DAFTAR PENERBANGAN ====>");
-        System.out.println("\nNO Asal\t\tTujuan\t   Jam\t\tHarga\t\tMaskapai");
+        System.out.print("Urutukan Berdarsarkan \n1.Harga Termurah \n2.Harga Termahal \nPilih? ");
+        int pil = in.nextInt();
+        switch (pil) {
+            case 1:
+                System.out.println("\nNO Asal\t\tTujuan\t   Jam\t\tHarga\t\tMaskapai");
+                ascending(a);
+                break;
+            case 2:
+                System.out.println("\nNO Asal\t\tTujuan\t   Jam\t\tHarga\t\tMaskapai");
+                descending(a);
+                break;
+            default:
+                System.out.println("Yang anda Masukkan Salah  O)O");
+                break;
+        }
+    }
+
+    public static String[][] ascending(String jp[][]) {
+        String a[][] = jp;
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a.length - 1; j++) {
                 int harga1 = Integer.parseInt(a[j][1]);
@@ -38,11 +56,44 @@ public class Alsuda {
         for (int i = 0; i < a.length; i++) {
             System.out.println((i + 1) + ". " + a[i][0] + "\t\t" + a[i][1] + "\t\t" + a[i][2]);
         }
+        jp = a;
+        return jp;
+    }
 
+    public static String[][] descending(String jp[][]) {
+        String a[][] = jp;
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length - 1; j++) {
+                int harga1 = Integer.parseInt(a[j][1]);
+                int harga2 = Integer.parseInt(a[j + 1][1]);
+                if (harga1 < harga2) {
+                    int temp = harga1;
+                    harga1 = harga2;
+                    harga2 = temp;
+                    // urut jadwal
+                    String p = a[j][0];
+                    a[j][0] = a[j + 1][0];
+                    a[j + 1][0] = p;
+                    // urut maskapai
+                    String m = a[j][2];
+                    a[j][2] = a[j + 1][2];
+                    a[j + 1][2] = m;
+                    a[j][1] = String.valueOf(harga1);
+                    a[j + 1][1] = String.valueOf(harga2);
+                }
+
+            }
+        }
+        for (int i = 0; i < a.length; i++) {
+            System.out.println((i + 1) + ". " + a[i][0] + "\t\t" + a[i][1] + "\t\t" + a[i][2]);
+        }
+        jp = a;
+        return jp;
     }
 
     public static void pesanTiket(String a[][], String b[][]) {
-        daftarPenerbangan(a);
+        System.out.println("\nNO Asal\t\tTujuan\t   Jam\t\tHarga\t\tMaskapai");
+        ascending(a);
         System.out.println("\n<=== PESAN TIKET ===>");
         System.out.print("Jumlah Tiket : ");
         int jt = in.nextInt();
